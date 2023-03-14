@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>personal_photo.png</file>
+        <file>back arrow.png</file>
+        <file>editpen.png</file>
+        <file>addtocart.png</file>
+        <file>cart.png</file>
+        <file>message.png</file>
+    </qresource>
+</RCC>
