@@ -1,24 +1,37 @@
 # InsToCart
 
-## 介紹
-跳脫傳統電商平台架構,將商品資訊由圖塊方式呈現給買家,讓使用者能
-夠在瀏覽時以更有特色、更引人注目的形式呈現給使用者,而且因為圖塊
-方式的呈現,整體介面變得更加整潔,兼具美感與使用時的舒適度。
-## 功能
-#### **使用者**
-  - 可以執行創建帳號帳號密碼的功能
-  - 以同帳戶進行登入登出及買賣等操作
-  - **使用者又可細分成買家及賣家:**
-    - 買家: 將商品加入購物車、搜尋商品、分享購物及使用心得,也可回覆其他使用者的貼文
-    - 賣家: 管理訂單、庫存及上架商品
-#### **商品**
-  - 有自己的屬性例如: 賣家、照片、價格、運費、存貨等
-  - 有四大種類: 服飾、生鮮、電子產品及居家生活用品
-  - 商品狀態可細分成: 已下單 or 在架上
-  - **已下單商品**又可分成以下六種狀態: 
-    - Placed
-    - To Ship
-    - To Received
-    - Arrived
-    - To Rate
-    - Canceled
+## Introduction
+Breaking away from the traditional e-commerce platform architecture, **InsToCart** presents product information in a grid-based format. This approach offers a more distinctive and eye-catching presentation to users, enhancing their browsing experience. With the grid layout, the interface becomes cleaner, combining aesthetic appeal with a comfortable user experience.
+
+## Features
+
+### **Users**
+- Users can create accounts with a username and password.
+- Various operations with the same account: Log in/log out, buying/selling.
+- **Users are further categorized into buyers and sellers:**
+  - **Buyers:** Add products to the shopping cart, search for products, share shopping experiences and reviews, and reply to posts from other users.
+  - **Sellers:** Manage orders, inventory, and product listings.
+
+---
+
+### **Products**
+- Products have specific attributes such as **seller**, **photos**, **price**, **shipping cost**, and **inventory**.
+- Products are divided into four major categories:
+  1. Apparel
+  2. Fresh Produce
+  3. Electronics
+  4. Home and Living
+- Product statuses are classified into two main types: 
+  - **Ordered**
+  - **Listed**
+- **Ordered products** can further have the following six statuses:
+  1. Placed  
+  2. To Ship  
+  3. To Receive  
+  4. Arrived  
+  5. To Rate  
+  6. Canceled
+
+--- 
+
+This design ensures a seamless and visually engaging e-commerce experience for both buyers and sellers.
