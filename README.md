@@ -12,8 +12,6 @@ Breaking away from the traditional e-commerce platform architecture, **InsToCart
   - **Buyers:** Add products to the shopping cart, search for products, share shopping experiences and reviews, and reply to posts from other users.
   - **Sellers:** Manage orders, inventory, and product listings.
 
----
-
 ### **Products**
 - Products have specific attributes such as **seller**, **photos**, **price**, **shipping cost**, and **inventory**.
 - Products are divided into four major categories:
