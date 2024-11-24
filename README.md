@@ -31,7 +31,3 @@ Breaking away from the traditional e-commerce platform architecture, **InsToCart
   4. Arrived  
   5. To Rate  
   6. Canceled
-
---- 
-
-This design ensures a seamless and visually engaging e-commerce experience for both buyers and sellers.
