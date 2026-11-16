@@ -1,0 +1,16 @@
+.DS_Store
+build/
+dist/
+*.app/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.pro.user
+*.pro.user.*
+*.o
+*.obj
+Makefile
+moc_*
+ui_*
+qrc_*
+.env

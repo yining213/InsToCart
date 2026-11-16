@@ -1,0 +1,33 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="cart.png">assets/icons/cart.png</file>
+    <file alias="message.png">assets/icons/message.png</file>
+    <file alias="person.png">assets/icons/person.png</file>
+  </qresource>
+  <qresource prefix="/icons">
+    <file alias="plus.png">assets/icons/plus.png</file>
+    <file alias="search2.png">assets/icons/search2.png</file>
+    <file alias="left.png">assets/icons/left.png</file>
+    <file alias="right.png">assets/icons/right.png</file>
+    <file alias="up.png">assets/icons/up.png</file>
+    <file alias="down.png">assets/icons/down.png</file>
+  </qresource>
+  <qresource prefix="/products">
+    <file alias="apple.jpg">assets/products/apple.jpg</file>
+    <file alias="chair.jpg">assets/products/chair.jpg</file>
+    <file alias="clothes.jpg">assets/products/clothes.jpg</file>
+    <file alias="iphone.jpg">assets/products/iphone.jpg</file>
+    <file alias="lego.jpg">assets/products/lego.jpg</file>
+    <file alias="pillow.jpg">assets/products/pillow.jpg</file>
+    <file alias="socks.jpg">assets/products/socks.jpg</file>
+    <file alias="toaster.jpg">assets/products/toaster.jpg</file>
+  </qresource>
+  <qresource prefix="/sql/sqlite">
+    <file alias="schema.sql">../database/sqlite/schema.sql</file>
+    <file alias="seed.sql">../database/sqlite/seed.sql</file>
+  </qresource>
+  <qresource prefix="/sql/mysql">
+    <file alias="schema.sql">../database/mysql/schema.sql</file>
+    <file alias="seed.sql">../database/mysql/seed.sql</file>
+  </qresource>
+</RCC>

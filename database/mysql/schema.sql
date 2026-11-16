@@ -1,0 +1,37 @@
+CREATE TABLE IF NOT EXISTS accounts (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  account VARCHAR(255) NOT NULL UNIQUE,
+  salt CHAR(32) NOT NULL,
+  password_hash CHAR(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS products (
+  id INT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  category VARCHAR(80) NOT NULL,
+  price INT NOT NULL,
+  stock INT NOT NULL,
+  image_key VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS cart (
+  account_id BIGINT NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT NOT NULL,
+  PRIMARY KEY (account_id, product_id),
+  FOREIGN KEY (account_id) REFERENCES accounts(id),
+  FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS orders (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  account_id BIGINT NOT NULL,
+  placed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  total INT NOT NULL,
+  FOREIGN KEY (account_id) REFERENCES accounts(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS order_items (
+  order_id BIGINT NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT NOT NULL,
+  unit_price INT NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+  FOREIGN KEY (product_id) REFERENCES products(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

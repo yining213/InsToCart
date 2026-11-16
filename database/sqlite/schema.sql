@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS accounts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  account TEXT NOT NULL UNIQUE,
+  salt TEXT NOT NULL,
+  password_hash TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS products (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  price INTEGER NOT NULL,
+  stock INTEGER NOT NULL,
+  image_key TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS cart (
+  account_id INTEGER NOT NULL REFERENCES accounts(id),
+  product_id INTEGER NOT NULL REFERENCES products(id),
+  quantity INTEGER NOT NULL,
+  PRIMARY KEY (account_id, product_id)
+);
+CREATE TABLE IF NOT EXISTS orders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  account_id INTEGER NOT NULL REFERENCES accounts(id),
+  placed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  total INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS order_items (
+  order_id INTEGER NOT NULL REFERENCES orders(id),
+  product_id INTEGER NOT NULL REFERENCES products(id),
+  quantity INTEGER NOT NULL,
+  unit_price INTEGER NOT NULL
+);

@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MyMarket</class>
+ <widget class="QDialog" name="MyMarket">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(243, 188, 46);</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>20</y>
+     <width>301</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Consolas</family>
+     <pointsize>40</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 40pt &quot;Consolas&quot;;
+</string>
+   </property>
+   <property name="text">
+    <string>MY MARKET</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="back">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>630</y>
+     <width>61</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image:url(./img/backarrow.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="autoDefault">
+    <bool>false</bool>
+   </property>
+   <property name="default">
+    <bool>false</bool>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>150</y>
+     <width>911</width>
+     <height>481</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="page">
+    <widget class="QWidget" name="gridLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>311</width>
+       <height>271</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+      <item row="0" column="1">
+       <widget class="QPushButton" name="search1">
+        <property name="styleSheet">
+         <string notr="true">background-color: white;
+border-style: outset;
+padding: 5px;
+font: 10pt &quot;Consolas&quot;;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: beige;
+</string>
+        </property>
+        <property name="text">
+         <string>SEARCH</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="searchNametext">
+        <property name="font">
+         <font>
+          <family>Consolas</family>
+          <pointsize>12</pointsize>
+          <weight>50</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">    border-style: outset;
+font: 12pt &quot;Consolas&quot;;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    min-width: 10em;
+    padding: 6px;
+color: white;
+background-color: rgba(0, 0, 0, 70);
+</string>
+        </property>
+        <property name="placeholderText">
+         <string>Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="search2">
+        <property name="styleSheet">
+         <string notr="true">background-color: white;
+border-style: outset;
+padding: 5px;
+font: 10pt &quot;Consolas&quot;;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: beige;
+</string>
+        </property>
+        <property name="text">
+         <string>SEARCH</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLineEdit" name="searchIDtext">
+        <property name="styleSheet">
+         <string notr="true">    border-style: outset;
+font: 12pt &quot;Consolas&quot;;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    min-width: 10em;
+    padding: 6px;
+color: white;
+background-color: rgba(0, 0, 0, 70);
+</string>
+        </property>
+        <property name="placeholderText">
+         <string>itemID</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QComboBox" name="searchType">
+        <property name="styleSheet">
+         <string notr="true">    border-style: outset;
+font: 12pt &quot;Consolas&quot;;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    min-width: 10em;
+    padding: 6px;
+color: white;
+background-color: rgba(0, 0, 0, 70);
+</string>
+        </property>
+        <property name="placeholderText">
+         <string>CATEGORY</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>ALL</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>FOOD</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CLOTHES</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>HOME LIVING</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ELECTRIC DEVICE</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>340</y>
+       <width>51</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>10</y>
+       <width>521</width>
+       <height>341</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">    border-style: outset;
+background-color: rgba(255, 255, 255, 70);
+    border-width: 1px;
+    border-color: beige;
+font: 17pt &quot;Consolas&quot;;
+color: black;
+border-style: outset;
+padding: 2pt;
+
+</string>
+     </property>
+     <property name="dragDropOverwriteMode">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
+     <property name="gridStyle">
+      <enum>Qt::NoPen</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="update">
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>370</y>
+       <width>131</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-style: outset;
+font: 75 16pt &quot;Consolas&quot;;
+color: white;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    padding: 6px;</string>
+     </property>
+     <property name="text">
+      <string>UPDATE</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="addProduct">
+     <property name="geometry">
+      <rect>
+       <x>680</x>
+       <y>370</y>
+       <width>81</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Consolas</family>
+       <pointsize>16</pointsize>
+       <weight>9</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-style: outset;
+font: 75 16pt &quot;Consolas&quot;;
+color: white;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    padding: 6px;</string>
+     </property>
+     <property name="text">
+      <string>ADD</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="del">
+     <property name="geometry">
+      <rect>
+       <x>800</x>
+       <y>370</y>
+       <width>81</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-style: outset;
+font: 75 16pt &quot;Consolas&quot;;
+color: white;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    padding: 6px;</string>
+     </property>
+     <property name="text">
+      <string>DEL</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>871</width>
+       <height>421</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 15pt &quot;Consolas&quot;;
+background-color: rgb(255, 255, 255, 70);
+border-style: outset;
+
+</string>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="ToBeCompleted">
+      <attribute name="title">
+       <string>To Be Completed</string>
+      </attribute>
+      <widget class="QTableWidget" name="tbctable">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>30</y>
+         <width>811</width>
+         <height>290</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">    border-style: outset;
+    border-width: 1px;
+    border-color: beige;
+font: 17pt &quot;Consolas&quot;;
+color: black;
+border-style: outset;
+padding: 2pt;
+
+</string>
+       </property>
+       <property name="dragDropOverwriteMode">
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+       <property name="showGrid">
+        <bool>false</bool>
+       </property>
+       <property name="gridStyle">
+        <enum>Qt::NoPen</enum>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="save">
+       <property name="geometry">
+        <rect>
+         <x>740</x>
+         <y>330</y>
+         <width>101</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: white;    
+border-style: outset;
+font: 9pt &quot;Consolas&quot; ;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    font: bold 15px;
+    padding: 6px;
+background-color: rgb(243, 188, 46, 70);</string>
+       </property>
+       <property name="text">
+        <string>SAVE</string>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="Completed">
+      <attribute name="title">
+       <string>Completed</string>
+      </attribute>
+      <widget class="QTableWidget" name="ctable">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>30</y>
+         <width>811</width>
+         <height>290</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">    border-style: outset;
+background-color: rgba(255, 255, 255, 70);
+    border-width: 1px;
+    border-color: beige;
+font: 17pt &quot;Consolas&quot;;
+color: black;
+border-style: outset;
+padding: 2pt;
+
+</string>
+       </property>
+       <property name="dragDropOverwriteMode">
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+       <property name="showGrid">
+        <bool>false</bool>
+       </property>
+       <property name="gridStyle">
+        <enum>Qt::NoPen</enum>
+       </property>
+       <property name="wordWrap">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="managestock">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>60</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 13px;
+color: rgb(255, 255, 255);
+font: 14pt &quot;Consolas&quot;;
+
+</string>
+   </property>
+   <property name="text">
+    <string>MANAGE STOCK</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="manageorder">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>60</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 13px;
+color: rgb(255, 255, 255);
+font: 14pt &quot;Consolas&quot;;
+</string>
+   </property>
+   <property name="text">
+    <string>MANAGE ORDER</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="curpage">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>90</y>
+     <width>191</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 20pt &quot;Consolas&quot;;
+color:rgb(38, 115, 154);
+color: white;
+</string>
+   </property>
+   <property name="text">
+    <string>123</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
