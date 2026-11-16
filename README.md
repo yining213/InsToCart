@@ -2,9 +2,9 @@
 
 InsToCart is a Qt desktop storefront prototype. It preserves the project's original login and product catalog forms while organizing the application around screens, domain models, and interchangeable SQL storage. Visitors can run it with SQLite; contributors can connect the same UI to a local MySQL database.
 
-[![InsToCart catalog with eight product cards. Open the 30-second demo.](docs/media/catalog-preview.png)](docs/media/instocart-demo.mp4)
+![30-second InsToCart demo showing sign-in, product filtering and sorting, adding to the cart, and checkout.](docs/media/instocart-demo.gif)
 
-[Open the 30-second demo (MP4)](docs/media/instocart-demo.mp4)
+[Download the full-resolution MP4](docs/media/instocart-demo.mp4?raw=true)
 
 ## Quick start on macOS
 
