@@ -1,0 +1,23 @@
+name: Qt tests
+
+on:
+  push:
+    branches: [main, qt-desktop-refactor]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sqlite:
+    name: Qt 5 / SQLite
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Qt and SQLite driver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qtbase5-dev qt5-qmake libqt5sql5-sqlite
+      - name: Run Qt Test
+        run: ./scripts/test-qt.sh
