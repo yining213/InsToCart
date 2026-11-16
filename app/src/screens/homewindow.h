@@ -1,9 +1,12 @@
 #pragma once
+
 #include "ui_homepage.h"
-#include "domain/product.h"
+#include "catalog/catalogmodel.h"
 #include <QMainWindow>
-#include <QVector>
 #include <functional>
+
+class QListView;
+class QStackedWidget;
 class Store;
 
 class HomeWindow : public QMainWindow {
@@ -16,15 +19,21 @@ public:
 private:
     Ui::HomePage ui;
     Store &store;
+    ProductCatalogModel catalog;
+    CatalogSortFilterModel results;
+    CatalogPageModel page;
+    QListView *view;
+    QStackedWidget *catalogState;
+    QWidget *emptyState;
+    QWidget *errorState;
     int accountId = -1;
-    int page = 0;
-    int sortMode = 0;
-    QVector<Product> products;
-    QVector<QFrame*> frames;
-    QVector<QLabel*> names, prices, pictures;
-    QVector<QDoubleSpinBox*> quantities;
-    QVector<QPushButton*> addButtons, detailButtons;
-    void render();
-    void addToCart(int slot);
-    void showDetails(int slot);
+    CatalogSortFilterModel::Order sortOrder = CatalogSortFilterModel::Order::ById;
+    bool catalogReady = false;
+
+    void applyCriteria();
+    void showPage(int pageNumber);
+    void closeCards();
+    void addToCart(int productId, int quantity);
+    void showDetails(int productId);
+    QModelIndex visibleProduct(int productId) const;
 };

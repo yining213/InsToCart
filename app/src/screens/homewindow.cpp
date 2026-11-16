@@ -1,60 +1,108 @@
 #include "homewindow.h"
+
 #include "cartdialog.h"
+#include "catalog/productcarddelegate.h"
 #include "storage/store.h"
-#include <QComboBox>
-#include <QDoubleSpinBox>
-#include <QFrame>
 #include <QIcon>
-#include <QLabel>
-#include <QLineEdit>
+#include <QListView>
 #include <QMessageBox>
-#include <QPixmap>
-#include <QPushButton>
-#include <QStatusBar>
+#include <QSignalBlocker>
+#include <QStackedWidget>
+#include <utility>
+
+namespace {
+class CatalogView final : public QListView {
+public:
+    explicit CatalogView(QWidget *parent) : QListView(parent) {
+        setObjectName("catalogView");
+        setViewMode(QListView::IconMode);
+        setMovement(QListView::Static);
+        setResizeMode(QListView::Adjust);
+        setUniformItemSizes(true);
+        setEditTriggers(QAbstractItemView::NoEditTriggers);
+        setSelectionMode(QAbstractItemView::NoSelection);
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        setFrameShape(QFrame::NoFrame);
+        setStyleSheet("QListView { background: transparent; }");
+        setGridSize(QSize(248, 245));
+    }
+
+protected:
+    void resizeEvent(QResizeEvent *event) override {
+        QListView::resizeEvent(event);
+        const QSize available = viewport()->size();
+        setGridSize(QSize(qMax(1, available.width() / 4), qMax(1, available.height() / 2)));
+    }
+};
+}
 
 HomeWindow::HomeWindow(Store &backend) : store(backend) {
     ui.setupUi(this);
+    setMinimumSize(1000, 630);
     setWindowTitle("InsToCart — " + store.backendName().toUpper());
-    frames = {ui.frame_0, ui.frame_1, ui.frame_4, ui.frame_5,
-              ui.frame_6, ui.frame_7, ui.frame_8, ui.frame_9};
-    names = {ui.label_0_name, ui.label_1_name, ui.label_2_name, ui.label_3_name,
-             ui.label_4_name, ui.label_5_name, ui.label_6_name, ui.label_7_name};
-    prices = {ui.label_0_price, ui.label_1_price, ui.label_2_price, ui.label_3_price,
-              ui.label_4_price, ui.label_5_price, ui.label_6_price, ui.label_7_price};
-    pictures = {ui.label_0_img, ui.label_1_img, ui.label_2_img, ui.label_3_img,
-                ui.label_4_img, ui.label_5_img, ui.label_6_img, ui.label_7_img};
-    quantities = {ui.doubleSpinBox_0, ui.doubleSpinBox_1, ui.doubleSpinBox_2,
-                  ui.doubleSpinBox_3, ui.doubleSpinBox_4, ui.doubleSpinBox_5,
-                  ui.doubleSpinBox_6, ui.doubleSpinBox_7};
-    addButtons = {ui.plus_0, ui.plus_1, ui.plus_2, ui.plus_3,
-                  ui.plus_4, ui.plus_5, ui.plus_6, ui.plus_7};
-    detailButtons = {ui.pushButton_back_0, ui.pushButton_back_1,
-                     ui.pushButton_2_back, ui.pushButton_3_back,
-                     ui.pushButton_4_back, ui.pushButton_5_back,
-                     ui.pushButton_6_back, ui.pushButton_7_back};
+
+    auto *containerLayout = new QVBoxLayout(ui.catalogContainer);
+    containerLayout->setContentsMargins(0, 0, 0, 0);
+    catalogState = new QStackedWidget(ui.catalogContainer);
+    containerLayout->addWidget(catalogState);
+    view = new CatalogView(catalogState);
+    catalogState->addWidget(view);
+    emptyState = new QLabel("No matching products.", catalogState);
+    emptyState->setObjectName("catalogEmpty");
+    static_cast<QLabel *>(emptyState)->setAlignment(Qt::AlignCenter);
+    catalogState->addWidget(emptyState);
+
+    errorState = new QWidget(catalogState);
+    errorState->setObjectName("catalogError");
+    auto *errorLayout = new QVBoxLayout(errorState);
+    auto *errorLabel = new QLabel("Could not load products.", errorState);
+    errorLabel->setAlignment(Qt::AlignCenter);
+    auto *retry = new QPushButton("Retry", errorState);
+    retry->setObjectName("catalogRetry");
+    errorLayout->addStretch();
+    errorLayout->addWidget(errorLabel);
+    errorLayout->addWidget(retry, 0, Qt::AlignHCenter);
+    errorLayout->addStretch();
+    catalogState->addWidget(errorState);
+    connect(retry, &QPushButton::clicked, this, &HomeWindow::refresh);
+
+    results.setSourceModel(&catalog);
+    page.setSourceModel(&results);
+    view->setModel(&page);
+    auto *delegate = new ProductCardDelegate(view);
+    view->setItemDelegate(delegate);
+    connect(delegate, &ProductCardDelegate::addRequested, this, &HomeWindow::addToCart);
+    connect(delegate, &ProductCardDelegate::detailsRequested, this, &HomeWindow::showDetails);
+
     ui.search->setIcon(QIcon(":/icons/search2.png"));
     ui.left_arrow->setIcon(QIcon(":/icons/left.png"));
     ui.right_arrow->setIcon(QIcon(":/icons/right.png"));
     ui.up->setIcon(QIcon(":/icons/up.png"));
     ui.down->setIcon(QIcon(":/icons/down.png"));
     ui.settings->setStyleSheet("image: url(:/person.png);");
-    for (int slot = 0; slot < 8; ++slot) {
-        addButtons[slot]->setIcon(QIcon(":/icons/plus.png"));
-        connect(addButtons[slot], &QPushButton::clicked, this, [this, slot] { addToCart(slot); });
-        connect(detailButtons[slot], &QPushButton::clicked, this, [this, slot] { showDetails(slot); });
-    }
-    connect(ui.search, &QPushButton::clicked, this, [this] { refresh(); });
-    connect(ui.search_lineEdit, &QLineEdit::returnPressed, this, [this] { refresh(); });
+    ui.search->setAccessibleName("Search products");
+    ui.left_arrow->setAccessibleName("Previous product page");
+    ui.right_arrow->setAccessibleName("Next product page");
+    ui.up->setAccessibleName("Sort by lowest price");
+    ui.down->setAccessibleName("Sort by highest price");
+    ui.cart->setAccessibleName("Open cart");
+    ui.settings->setAccessibleName("Log out");
+
+    connect(ui.search, &QPushButton::clicked, this, &HomeWindow::applyCriteria);
+    connect(ui.search_lineEdit, &QLineEdit::returnPressed, this, &HomeWindow::applyCriteria);
     connect(ui.search_comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, [this] { refresh(); });
-    connect(ui.left_arrow, &QPushButton::clicked, this, [this] {
-        if (page > 0) { --page; render(); }
+            this, [this] { applyCriteria(); });
+    connect(ui.left_arrow, &QPushButton::clicked, this, [this] { showPage(page.currentPage() - 1); });
+    connect(ui.right_arrow, &QPushButton::clicked, this, [this] { showPage(page.currentPage() + 1); });
+    connect(ui.up, &QPushButton::clicked, this, [this] {
+        sortOrder = CatalogSortFilterModel::Order::PriceAscending;
+        applyCriteria();
     });
-    connect(ui.right_arrow, &QPushButton::clicked, this, [this] {
-        if ((page + 1) * 8 < products.size()) { ++page; render(); }
+    connect(ui.down, &QPushButton::clicked, this, [this] {
+        sortOrder = CatalogSortFilterModel::Order::PriceDescending;
+        applyCriteria();
     });
-    connect(ui.up, &QPushButton::clicked, this, [this] { sortMode = 1; refresh(); });
-    connect(ui.down, &QPushButton::clicked, this, [this] { sortMode = 2; refresh(); });
     connect(ui.cart, &QPushButton::clicked, this, [this] {
         showCartDialog(this, store, accountId);
         refresh();
@@ -64,56 +112,85 @@ HomeWindow::HomeWindow(Store &backend) : store(backend) {
     connect(ui.message, &QPushButton::clicked, this, [this] {
         QMessageBox::information(this, "Messaging", "Messaging is not included in this desktop demo.");
     });
+    showPage(0);
 }
 
 void HomeWindow::setAccount(int id) {
     accountId = id;
     ui.search_lineEdit->clear();
+    const QSignalBlocker waitForReload(ui.search_comboBox);
     ui.search_comboBox->setCurrentIndex(0);
-    sortMode = 0;
+    sortOrder = CatalogSortFilterModel::Order::ById;
     refresh();
 }
 
 void HomeWindow::refresh() {
-    products = store.products(ui.search_lineEdit->text(), ui.search_comboBox->currentText(), sortMode);
-    page = 0;
-    render();
+    auto products = store.products();
+    catalogReady = products.has_value();
+    closeCards();
+    catalog.replaceProducts(products ? std::move(*products) : QVector<Product>());
+    applyCriteria();
 }
 
-void HomeWindow::render() {
-    for (int slot = 0; slot < 8; ++slot) {
-        const int index = page * 8 + slot;
-        const bool visible = index < products.size();
-        frames[slot]->setVisible(visible);
-        if (!visible) continue;
-        const Product &product = products[index];
-        names[slot]->setText(product.name);
-        prices[slot]->setText("$" + QString::number(product.price));
-        pictures[slot]->setPixmap(QPixmap(":/products/" + product.imageKey).scaled(
-            pictures[slot]->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        pictures[slot]->setAlignment(Qt::AlignCenter);
-        quantities[slot]->setDecimals(0);
-        quantities[slot]->setMinimum(1);
-        quantities[slot]->setMaximum(product.stock);
-        quantities[slot]->setValue(1);
+void HomeWindow::applyCriteria() {
+    closeCards();
+    results.setCriteria(ui.search_lineEdit->text(), ui.search_comboBox->currentText(), sortOrder);
+    showPage(0);
+}
+
+void HomeWindow::closeCards() {
+    for (int row = 0; row < page.rowCount(); ++row)
+        view->closePersistentEditor(page.index(row, 0));
+}
+
+void HomeWindow::showPage(int pageNumber) {
+    closeCards();
+    page.setPage(pageNumber);
+    ui.left_arrow->setEnabled(catalogReady && page.currentPage() > 0);
+    ui.right_arrow->setEnabled(catalogReady && page.currentPage() + 1 < page.pageCount());
+
+    if (!catalogReady) {
+        catalogState->setCurrentWidget(errorState);
+        return;
     }
-    ui.left_arrow->setEnabled(page > 0);
-    ui.right_arrow->setEnabled((page + 1) * 8 < products.size());
+    if (page.rowCount() == 0) {
+        catalogState->setCurrentWidget(emptyState);
+        return;
+    }
+
+    catalogState->setCurrentWidget(view);
+    for (int row = 0; row < page.rowCount(); ++row)
+        view->openPersistentEditor(page.index(row, 0));
 }
 
-void HomeWindow::addToCart(int slot) {
-    const int index = page * 8 + slot;
-    if (index >= products.size() || accountId < 0) return;
-    const Product &product = products[index];
-    if (!store.addToCart(accountId, product.id, static_cast<int>(quantities[slot]->value())))
+QModelIndex HomeWindow::visibleProduct(int productId) const {
+    for (int row = 0; row < page.rowCount(); ++row) {
+        const QModelIndex index = page.index(row, 0);
+        if (index.data(ProductCatalogModel::IdRole).toInt() == productId)
+            return index;
+    }
+    return {};
+}
+
+void HomeWindow::addToCart(int productId, int quantity) {
+    const QModelIndex product = visibleProduct(productId);
+    if (!product.isValid() || accountId < 0)
+        return;
+    if (!store.addToCart(accountId, productId, quantity))
         QMessageBox::warning(this, "Cart", store.error());
-    else statusBar()->showMessage(product.name + " added to cart", 2500);
+    else
+        statusBar()->showMessage(product.data().toString() + " added to cart", 2500);
 }
 
-void HomeWindow::showDetails(int slot) {
-    const int index = page * 8 + slot;
-    if (index >= products.size()) return;
-    const Product &p = products[index];
-    QMessageBox::information(this, p.name, p.category + "\nPrice: $" +
-        QString::number(p.price) + "\nAvailable: " + QString::number(p.stock));
+void HomeWindow::showDetails(int productId) {
+    const QModelIndex product = visibleProduct(productId);
+    if (!product.isValid())
+        return;
+    QMessageBox details(QMessageBox::Information, "Product details", {}, QMessageBox::Ok, this);
+    details.setTextFormat(Qt::PlainText);
+    details.setText(product.data().toString() + "\n" +
+                    product.data(ProductCatalogModel::CategoryRole).toString() + "\nPrice: $" +
+                    product.data(ProductCatalogModel::PriceRole).toString() + "\nAvailable: " +
+                    product.data(ProductCatalogModel::StockRole).toString());
+    details.exec();
 }

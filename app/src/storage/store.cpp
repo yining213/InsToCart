@@ -85,22 +85,23 @@ int Store::authenticate(const QString &account, const QString &password) {
                ? query.value(0).toInt() : -1;
 }
 
-QVector<Product> Store::products(const QString &search, const QString &category, int sort) {
-    QVector<Product> result;
-    QString statement = "SELECT id, name, category, price, stock, image_key FROM products "
-                        "WHERE stock > 0 AND name LIKE ? AND (? = 'ALL' OR category = ?)";
-    statement += sort == 1 ? " ORDER BY price ASC" : sort == 2 ? " ORDER BY price DESC"
-                                                          : " ORDER BY id ASC";
+std::optional<QVector<Product>> Store::products() {
     QSqlQuery query;
-    query.prepare(statement);
-    query.addBindValue("%" + search + "%");
-    query.addBindValue(category);
-    query.addBindValue(category);
-    if (!query.exec()) { lastError = query.lastError().text(); return result; }
+    if (!query.exec("SELECT id, name, category, price, stock, image_key FROM products "
+                    "WHERE stock > 0 ORDER BY id")) {
+        lastError = query.lastError().text();
+        return std::nullopt;
+    }
+
+    QVector<Product> result;
     while (query.next()) {
         result.append({query.value(0).toInt(), query.value(1).toString(),
                        query.value(2).toString(), query.value(3).toInt(),
                        query.value(4).toInt(), query.value(5).toString()});
+    }
+    if (query.lastError().isValid()) {
+        lastError = query.lastError().text();
+        return std::nullopt;
     }
     return result;
 }

@@ -46,9 +46,9 @@ int main(int argc, char *argv[]) {
             const QString homeShot = qEnvironmentVariable("INSTOCART_SCREENSHOT_HOME");
             if (!homeShot.isEmpty() && !home.grab().save(homeShot)) { app.exit(5); return; }
             const int id = store.authenticate(name + "@nycu.edu.tw", password);
-            const QVector<Product> products = store.products();
-            if (id < 1 || products.size() != 8) { app.exit(6); return; }
-            if (!store.addToCart(id, products[0].id, 2) || store.cart(id).size() != 1) {
+            const auto products = store.products();
+            if (id < 1 || !products || products->size() != 8) { app.exit(6); return; }
+            if (!store.addToCart(id, products->first().id, 2) || store.cart(id).size() != 1) {
                 qCritical() << store.error(); app.exit(7); return;
             }
             if (store.placeOrder(id) < 1 || !store.cart(id).isEmpty()) {

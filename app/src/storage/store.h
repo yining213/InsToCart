@@ -3,6 +3,7 @@
 #include "domain/cartline.h"
 #include <QString>
 #include <QVector>
+#include <optional>
 
 class Store {
 public:
@@ -11,7 +12,7 @@ public:
     QString backendName() const { return mode; }
     bool createAccount(const QString &account, const QString &password);
     int authenticate(const QString &account, const QString &password);
-    QVector<Product> products(const QString &search = {}, const QString &category = "ALL", int sort = 0);
+    std::optional<QVector<Product>> products();
     bool addToCart(int accountId, int productId, int quantity);
     QVector<CartLine> cart(int accountId);
     bool removeFromCart(int accountId, int productId);
